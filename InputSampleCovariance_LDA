@@ -1,0 +1,42 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jan 16 16:02:03 2018
+
+@author: Rebecca
+
+Loads train and test Titanic datasets from local drive and combines them into
+a single dataset. Within-class inputs are isolated and sample covariance 
+matrices calculated.
+"""
+
+"""
+Load, combine train.csv and test.csv
+"""
+
+import pandas as pd
+
+# read individual CSVs into pandas DataFrames
+train = pd.read_csv('C:/Users/Rebecca/Documents/Kaggle/Titanic/data/train.csv')
+test = pd.read_csv('C:/Users/Rebecca/Documents/Kaggle/Titanic/data/test.csv')
+
+# add "Survived" column to test & combine into a single DataFrame
+import numpy as np
+
+test['Survived'] = np.nan
+data = pd.concat([train, test])
+
+X = data.drop('Survived', axis = 1)
+
+# look at counts for target variable 'survived'
+pd.crosstab(index = data['Survived'], columns = 'Count')
+
+# Subset by 'Survived' class
+X_victims = X.loc[data['Survived'] == 0]
+X_survivors = X.loc[data['Survived'] == 1]
+
+# calculate within-class cov matrix
+cov_victims = X_victims.cov()
+cov_survivors = X_survivors.cov()
+
+# subtract the two
+diff = cov_victims - cov_survivors
