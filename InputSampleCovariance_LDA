@@ -38,5 +38,5 @@ X_survivors = X.loc[data['Survived'] == 1]
 cov_victims = X_victims.cov()
 cov_survivors = X_survivors.cov()
 
-# subtract the two
+# subtract
 diff = cov_victims - cov_survivors
